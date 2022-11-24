@@ -40,4 +40,8 @@ studentSchema.methods.generateToken =  function(){
     return jwt.sign({id:this.id, username:this.username},process.env.SECRET_KEY,{ expiresIn:'30d'});
 }
 
+studentSchema.methods.comparePassword = async function(candidatePassword){
+ return await bcrypt.compare(candidatePassword,this.password,);
+}
+
 module.exports = mongoose.model('student', studentSchema);
