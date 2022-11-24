@@ -1,7 +1,7 @@
 
 const mongoose = require('mongoose');
 
-const shema = mongoose.Schema;
+const schema = mongoose.Schema;
 
 const subjectSchema = new schema({
  

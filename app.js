@@ -12,6 +12,9 @@ require('http-status-codes');
 
 //routes
 const auth = require('./Routes/auth');
+const admin = require('./Routes/admin');
+const student = require('./Routes/student');
+
 
 const notFound = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/errorHandlerMiddleware');
@@ -28,7 +31,8 @@ app.use(express.json());
 
 //API routes
 app.use('/api/v1/auth',auth);
-
+app.use('/api/v1/admin',admin);
+app.use('/api/v1/student',student);
 // not found response
 app.use(notFound);
 app.use(errorHandlerMiddleware);

@@ -13,9 +13,13 @@ if(err.code === 11000){
     customError.message = `${Object.keys(err.keyValue)} should be unique`;
     customError.statusCode = StatusCodes.BAD_REQUEST;
 }
-
-    return res.status(customError.statusCode).json(customError.message);
-    //return res.status(customError.statusCode).json({message:customError.message})
+//mongoose validation error
+if(err.name === 'ValidationError'){
+    customError.statusCode = StatusCodes.BAD_REQUEST;
+    customError.message = `${Object.values(err.errors).map(el=>el.message).join(', ')}`;
+}
+    //return res.status(customError.statusCode).json(err);
+    return res.status(customError.statusCode).json({message:customError.message})
 }
 
 module.exports = errorHandlerMiddleware;
