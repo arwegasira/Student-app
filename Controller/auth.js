@@ -4,13 +4,19 @@ const Student = require('../Model/student');
 
 
 const register = async(req, res,next) => {
+
     const student = new Student(req.body)
     await student.save()
-    res.status(StatusCodes.OK).json({msg:'Ok',student});
+    const token = student.generateToken();
+    res.status(StatusCodes.OK).json({msg:'Ok',token});
 }
 
 const login = (req, res, next) => {
-    res.send('Login route');
+    const {password,email} = req.body;
+    if(!password || !email) {
+
+        
+    }
 }
 
 module.exports = {

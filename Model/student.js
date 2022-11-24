@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const schema = mongoose.Schema;
 
@@ -26,5 +28,16 @@ regNumber:{
 }
 
 },{ timestamps: true })
+
+
+studentSchema.pre('save',async function(){
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+
+})
+
+studentSchema.methods.generateToken =  function(){
+    return jwt.sign({id:this.id, username:this.username},process.env.SECRET_KEY,{ expiresIn:'30d'});
+}
 
 module.exports = mongoose.model('student', studentSchema);
