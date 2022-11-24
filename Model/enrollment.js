@@ -12,8 +12,12 @@ const enrollmentSchema = new schema({
     },
     subjectId:{
         type:mongoose.Types.ObjectId,
-        ref:'student',
+        ref:'subject',
         required:[true, 'Subject ID is required']
+    },
+    academicYear:{
+        type:String,
+        required:[true, 'Academic year is required']
     }
 },
 { timestamps: true }
