@@ -8,12 +8,12 @@ const enrolltoCourse = async(req,res,next) => {
 
 const {subjectId,academicYear,studentId}  = req.body;
 
-if(!subjectId || !academicYear) throw new BadRequestError('Subject and Academic Year are required');
+//if(!subjectId || !academicYear) throw new BadRequestError('Subject and Academic Year are required');
 
 //fetch student information
  const student = await Student.findOne({_id: studentId});
 if(!student) throw new NotFoundError('Student not registered');
-const enrolledCourses = student.enrollments;
+const enrolledCourses = student.enrollments.subject;
 
 //Check if enrollment exist
 const exist = enrolledCourses.filter(el => el.subjectId === subjectId && el.academicYear === academicYear)
@@ -25,7 +25,7 @@ await student.save();
 
 
 
-res.status(StatusCodes.OK).json({msg:'Ok',student})
+res.status(StatusCodes.OK).json({msg:'Ok',enrolledCourses})
 }
 const fetchStudentCourse = async(req, res, next) => {
     const studentId = req.params.id;

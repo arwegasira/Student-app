@@ -28,7 +28,7 @@ regNumber:{
 },
 
 enrollments:{
-    type:Array,
+    subject:[{subjectId:{type:String,required:[true,'course is required'],ref:'subject'},academicYear:{type:String,required:[true,'Academic year is required']},results:{catMarks:{type:Number},examMarks:{type:Number}}}]
    
 }
 
@@ -50,6 +50,6 @@ studentSchema.methods.comparePassword = async function(candidatePassword){
 }
 
 studentSchema.methods.addEnrollments = async function(enrollment){
-    return this.enrollments.push(enrollment)
+    return this.enrollments.subject.push(enrollment)
 }
 module.exports = mongoose.model('student', studentSchema);
