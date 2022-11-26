@@ -25,6 +25,11 @@ password:{
 regNumber:{
     type:String,
     
+},
+
+enrollments:{
+    type:Array,
+   
 }
 
 },{ timestamps: true })
@@ -44,4 +49,7 @@ studentSchema.methods.comparePassword = async function(candidatePassword){
  return await bcrypt.compare(candidatePassword,this.password,);
 }
 
+studentSchema.methods.addEnrollments = async function(enrollment){
+    return this.enrollments.push(enrollment)
+}
 module.exports = mongoose.model('student', studentSchema);

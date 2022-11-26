@@ -5,14 +5,27 @@ const {StatusCodes} = require('http-status-codes');
 const {NotFoundError,BadRequestError} = require('../errors')
 
 const enrolltoCourse = async(req,res,next) => {
-//check if enrollment already exists for academicYear
-    const {studentId,subjectId,academicYear} = req.body;
-    const enrollmentExists = await Enrollment.findOne({studentId: studentId, subjectId: subjectId,academicYear:academicYear})
-    if(enrollmentExists) throw new BadRequestError('You are already enrolled to this course.');
 
-    const enrollment = new Enrollment(req.body);
-    await enrollment.save();
-    res.status(StatusCodes.OK).json(enrollment)
+const {subjectId,academicYear,studentId}  = req.body;
+
+if(!subjectId || !academicYear) throw new BadRequestError('Subject and Academic Year are required');
+
+//fetch student information
+ const student = await Student.findOne({_id: studentId});
+if(!student) throw new NotFoundError('Student not registered');
+const enrolledCourses = student.enrollments;
+
+//Check if enrollment exist
+const exist = enrolledCourses.filter(el => el.subjectId === subjectId && el.academicYear === academicYear)
+if(exist.length) throw new BadRequestError('Student already enrolled to course');
+
+// add enrollment
+await student.addEnrollments({subjectId,academicYear}) ;
+await student.save();
+
+
+
+res.status(StatusCodes.OK).json({msg:'Ok',student})
 }
 const fetchStudentCourse = async(req, res, next) => {
     const studentId = req.params.id;
