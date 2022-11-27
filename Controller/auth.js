@@ -7,7 +7,6 @@ const {BadRequestError,NotFoundError,UnauthorizedError} = require('../errors/ind
 const register = async(req, res,next) => {
 
     const student = new Student(req.body)
-    console.log(req.body)
     await student.save()
     const token = student.generateToken();
     res.status(StatusCodes.OK).json({msg:'Ok',token});

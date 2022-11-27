@@ -1,6 +1,5 @@
 
 const Student = require('../Model/student');
-const Enrollment = require('../Model/enrollment');
 const {StatusCodes} = require('http-status-codes');
 const {NotFoundError,BadRequestError} = require('../errors')
 
@@ -8,7 +7,7 @@ const enrolltoCourse = async(req,res,next) => {
 
 const {subjectId,academicYear,studentId}  = req.body;
 
-//if(!subjectId || !academicYear) throw new BadRequestError('Subject and Academic Year are required');
+if(!subjectId || !academicYear) throw new BadRequestError('Subject and Academic Year are required');
 
 //fetch student information
  const student = await Student.findOne({_id: studentId});
@@ -27,20 +26,52 @@ await student.save();
 
 res.status(StatusCodes.OK).json({msg:'Ok',enrolledCourses})
 }
+
 const fetchStudentCourse = async(req, res, next) => {
     const studentId = req.params.id;
     const {academicYear} = req.query
-    let queryObj = {studentId: studentId};
-    if(academicYear) queryObj.academicYear = academicYear;
 
-    const enrollment = await Enrollment.find(queryObj).populate('subjectId');
-    if(!enrollment) throw new NotFoundError('No enrollment found');
+   
 
-    res.status(StatusCodes.OK).json(enrollment);
+    let result = await Student.findOne({_id:studentId}).populate('enrollments.subject.subjectId').exec();
+    if(!result) throw new NotFoundError('No enrollment found');
+
+    if(academicYear){
+        result = result.enrollments.subject.filter(el=> el.academicYear === academicYear)
+    }else{
+        result = result.enrollments.subject
+    }
     
+      res.status(StatusCodes.OK).json({result,count:result.length});
+    
+}
+
+const fetchCourseEnrollments = async(req, res, next) => {
+
+   const{query:{academicYear},params:{id:courseId}} = req;
+
+   let queryObj = {
+    'enrollments.subject.subjectId':courseId
+   }
+
+   if(academicYear) {
+     queryObj = {
+        'enrollments.subject.subjectId':courseId,
+        'enrollments.subject.academicYear':academicYear
+       }
+   }
+
+  const enrollments = await Student.find(queryObj).select('username regNumber email');
+  if(!enrollments.length) throw new NotFoundError('No enrollments found');
+
+
+   res.status(StatusCodes.OK).json({enrollments,count:enrollments.length})
+    
+
 }
 module.exports = {
     enrolltoCourse,
-    fetchStudentCourse
+    fetchStudentCourse,
+    fetchCourseEnrollments
 }
 
