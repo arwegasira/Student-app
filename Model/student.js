@@ -42,7 +42,7 @@ studentSchema.pre('save',async function(){
 })
 
 studentSchema.methods.generateToken =  function(){
-    return jwt.sign({id:this.id, username:this.username},process.env.SECRET_KEY,{ expiresIn:'30d'});
+    return jwt.sign({id:this._id, username:this.username},process.env.SECRET_KEY,{ expiresIn:'30d'});
 }
 
 studentSchema.methods.comparePassword = async function(candidatePassword){

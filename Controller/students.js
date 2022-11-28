@@ -46,32 +46,10 @@ const fetchStudentCourse = async(req, res, next) => {
     
 }
 
-const fetchCourseEnrollments = async(req, res, next) => {
 
-   const{query:{academicYear},params:{id:courseId}} = req;
-
-   let queryObj = {
-    'enrollments.subject.subjectId':courseId
-   }
-
-   if(academicYear) {
-     queryObj = {
-        'enrollments.subject.subjectId':courseId,
-        'enrollments.subject.academicYear':academicYear
-       }
-   }
-
-  const enrollments = await Student.find(queryObj).select('username regNumber email');
-  if(!enrollments.length) throw new NotFoundError('No enrollments found');
-
-
-   res.status(StatusCodes.OK).json({enrollments,count:enrollments.length})
-    
-
-}
 module.exports = {
     enrolltoCourse,
     fetchStudentCourse,
-    fetchCourseEnrollments
+  
 }
 

@@ -8,7 +8,8 @@ const app = express();
 const connect = require('./db/connect');
 require('http-status-codes');
 
-
+//authenticationMiddleware
+const authmiddleware = require('./middleware/authentication');
 
 //routes
 const auth = require('./Routes/auth');
@@ -31,8 +32,8 @@ app.use(express.json());
 
 //API routes
 app.use('/api/v1/auth',auth);
-app.use('/api/v1/admin',admin);
-app.use('/api/v1/student',student);
+app.use('/api/v1/admin',authmiddleware,admin);
+app.use('/api/v1/student',authmiddleware,student);
 // not found response
 app.use(notFound);
 app.use(errorHandlerMiddleware);
