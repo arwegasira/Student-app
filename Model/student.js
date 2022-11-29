@@ -19,7 +19,7 @@ email:{
 },
 password:{
     type:String,
-    match:[/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})/,'Invalid password']
+    match:[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/,'Invalid password']
 },
 
 regNumber:{
@@ -46,7 +46,7 @@ studentSchema.methods.generateToken =  function(){
 }
 
 studentSchema.methods.comparePassword = async function(candidatePassword){
- return await bcrypt.compare(candidatePassword,this.password,);
+ return await bcrypt.compare(candidatePassword,this.password);
 }
 
 studentSchema.methods.addEnrollments = async function(enrollment){

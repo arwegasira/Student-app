@@ -20,10 +20,11 @@ const login = async(req, res, next) => {
 
     // find that student user
     const student = await Student.findOne({email: email});
+   
 
     if(!student) throw new UnauthorizedError('Invalid credentials');
-
     const ispasswordCorrect = await student.comparePassword(password);
+   
 
     if(!ispasswordCorrect) throw new UnauthorizedError('Invalid password')
     const token = student.generateToken();
