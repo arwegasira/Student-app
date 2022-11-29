@@ -54,7 +54,9 @@ const markStudent = async(req, res, next) => {
        } 
    })
 
-   const result = await student.save();
+   //const result = await student.save();
+   const result = await Student.updateOne({_id: student._id},{'enrollments.subject':student.enrollments.subject});
+
 
    
 

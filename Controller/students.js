@@ -20,12 +20,13 @@ if(exist.length) throw new BadRequestError('Student already enrolled to course')
 
 // add enrollment
 await student.addEnrollments({subjectId,academicYear}) ;
-await student.save();
-
+await Student.updateOne({_id: student._id},{'enrollments.subject':student.enrollments.subject});
 
 
 res.status(StatusCodes.OK).json({msg:'Ok',enrolledCourses})
+
 }
+
 
 const fetchStudentCourse = async(req, res, next) => {
     const studentId = req.params.id;

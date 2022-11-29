@@ -7,7 +7,6 @@ const {BadRequestError,NotFoundError,UnauthorizedError} = require('../errors/ind
 const register = async(req, res,next) => {
 
     const student = new Student(req.body)
-    console.log(student)
     await student.save()
     const token = student.generateToken();
     console.log(token);
@@ -29,7 +28,7 @@ const login = async(req, res, next) => {
     if(!ispasswordCorrect) throw new UnauthorizedError('Invalid password')
     const token = student.generateToken();
  
-    res.status(StatusCodes.OK).json({token})
+    res.status(StatusCodes.OK).json({user:{userId:student._id,username:student.username},token})
  
 }
 
