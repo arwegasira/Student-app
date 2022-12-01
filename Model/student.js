@@ -24,6 +24,7 @@ password:{
 
 regNumber:{
     type:String,
+    unique:true,
     
 },
 
