@@ -7,7 +7,6 @@ const counter = require('../Model/counter');
 
 const register = async(req, res,next) => {
     //increment registration number
-
      Counter.findOneAndUpdate({name:'REG Number'},{$inc:{value:1}},{returnDocument:'after'}).then(async(el)=>{
     if(el === null ){
         const counter = new Counter({name:'REG Number',value:1})
