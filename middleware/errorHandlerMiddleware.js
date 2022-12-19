@@ -13,6 +13,13 @@ if(err.code === 11000){
     customError.message = `${Object.keys(err.keyValue)} should be unique`;
     customError.statusCode = StatusCodes.BAD_REQUEST;
 }
+//mongoose cast error
+if(err.name === 'CastError'){
+    customError.statusCode = StatusCodes.NOT_FOUND;
+    customError.message = `No item found with id: ${err.value}`
+}
+
+
 //mongoose validation error
 if(err.name === 'ValidationError'){
     customError.statusCode = StatusCodes.BAD_REQUEST;
