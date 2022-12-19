@@ -3,10 +3,17 @@ require('express-async-errors');
 require('dotenv').config();
 require('http-status-codes');
 
+const roles = require('./Model/role');
+const adminRole = roles.filter(role => role._id === 1)[0]._id ;
+const studentRole = roles.filter(role => role._id === 2)[0]._id; 
+const lecturerRole = roles.filter(role => role._id === 3)[0]._id ;
+
 
 const express = require('express');
 const app = express();
-//security options
+
+
+//security packages
 const helmet = require('helmet');
 const cors = require('cors');
 const xss = require('xss-clean');
@@ -30,6 +37,8 @@ app.use(xss());
 
 //authenticationMiddleware
 const authmiddleware = require('./middleware/authentication');
+const roleauth = require('./middleware/roleauth');
+
 
 //routes
 const auth = require('./Routes/auth');
@@ -52,8 +61,9 @@ app.use(express.json());
 
 //API routes
 app.use('/api/v1/auth',auth);
-app.use('/api/v1/admin',authmiddleware,admin);
-app.use('/api/v1/student',authmiddleware,student);
+app.use('/api/v1/admin',authmiddleware,roleauth([adminRole,studentRole]),admin);
+app.use('/api/v1/student',authmiddleware,roleauth([adminRole,studentRole]),student);
+
 // not found response
 app.use(notFound);
 app.use(errorHandlerMiddleware);
@@ -62,8 +72,10 @@ app.use(errorHandlerMiddleware);
 const start = async()=>{
  await connect(process.env.MONGO_URI).then(res=>{
    app.listen(port,console.log(`Sever is listening on ${port}`)); 
- }).catch(err=>console.log(err))
+
+      }).catch(err=>console.log(err))
 }
 
 start();
+
 

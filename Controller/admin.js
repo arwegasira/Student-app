@@ -1,6 +1,7 @@
 
 const Subject = require('../Model/subjects');
-const Student = require('../Model/student');
+const Student = require('../Model/user');
+const Role = require('../Model/role');
 const {StatusCodes} = require('http-status-codes');
 const {NotFoundError, BadRequestError} = require('../errors')
 
@@ -63,10 +64,16 @@ const markStudent = async(req, res, next) => {
    res.status(StatusCodes.OK).json(result);
 }
 
+const createRole = async (req,res)=>{
+   const role = new Role(req.body);
+   await role.save();
+   res.status(StatusCodes.OK).json(role);
+}
 
  module.exports = {
     addSubject,
     fetchCourseEnrollments,
-    markStudent
+    markStudent,
+    createRole
    
  }   

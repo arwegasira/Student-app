@@ -9,5 +9,6 @@ router.post('/addsubject', addSubject);
 router.get('/courseEnrollments/:id',fetchCourseEnrollments)
 router.post('/markstudent/:id',markStudent);
 
+
 module.exports = router;
 
